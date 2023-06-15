@@ -1,9 +1,11 @@
 const Note = require("../models/NoteModel");
 
 
-const getNotes = (request, response) => {
+const getNotes = async (request, response) => {
+    let listOfNotes = await Note.find();
+    
     response.json({
-        message: "The list of notes"
+        notes: listOfNotes
     });
 };
 
