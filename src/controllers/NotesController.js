@@ -18,12 +18,20 @@ const createNotes = async (request, response) => {
         createdAt: Date.now()
     });
     await newNote.save();
-
+    response.status(201);
     response.json({
         note: newNote
-    })
+    });
 };
 
+const deleteAllNotes = async (request, response) => {
+    await Note.deleteMany({});
+
+    response.json({
+        message: "all notes cleared from database"
+    })
+}
+
 module.exports = {
-    getNotes, createNotes
+    getNotes, createNotes, deleteAllNotes
 };
