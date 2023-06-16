@@ -9,6 +9,20 @@ const getNotes = async (request, response) => {
     });
 };
 
+// Function to get a single note using params which is the ID of the note
+// Handles error by responding with message if note not found in db
+const getNoteById = async (request, response) => {
+    let note = await Note.findById(request.params.id)
+                        .catch(error => {
+                            console.log("Some error while accessing data:\n" + error)
+                            response.status(404).json({
+                                error: "Id not found in database"
+                            })
+                        });
+    response.send(note);
+}
+
+
 const createNotes = async (request, response) => {
     let newNote = new Note({
         title: request.body.title,
@@ -33,5 +47,5 @@ const deleteAllNotes = async (request, response) => {
 }
 
 module.exports = {
-    getNotes, createNotes, deleteAllNotes
+    getNotes, createNotes, deleteAllNotes, getNoteById
 };
