@@ -4,7 +4,10 @@ const mongoose = require("mongoose");
 // Requires a title which is a string, 
 // Requires a description which is a string
 const Note = mongoose.model("Note", {
-    title: String,
+    title: {
+        type: String,
+        required: true
+    },
     description: String,
     isCompleted: Boolean,
     dueDate: Date,
