@@ -25,6 +25,9 @@ app.get("/", (request, response) => {
 const notesRouter = require("./routes/Notes_routes");
 app.use("/notes", notesRouter);
 
+const userRouter = require("./routes/UserRoutes");
+app.use("/user", userRouter);
+
 module.exports = {
 	app
 }
