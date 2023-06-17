@@ -38,6 +38,12 @@ const createNotes = async (request, response) => {
     });
 };
 
+const updateNote = async (request, response) => {
+    let updatedNote = await Note.findByIdAndUpdate(request.params.id, request.body, {new: true})
+    response.send(updatedNote);
+};
+
+
 const deleteAllNotes = async (request, response) => {
     await Note.deleteMany({});
 
@@ -46,6 +52,23 @@ const deleteAllNotes = async (request, response) => {
     })
 }
 
+const deleteNoteById = async (request, response) => {
+    let deletedNote = await Note.findByIdAndDelete(request.params.id)
+                .catch(error => {
+                    console.log("Some error while accessing data:\n" + error)
+                    response.status(404).json({
+                        error: "Id not found in database"
+                    })
+                });
+    if (deletedNote){
+        response.json({
+            message: "Note deleted"
+        })
+    };
+}
+    
+
 module.exports = {
-    getNotes, createNotes, deleteAllNotes, getNoteById
+    getNotes, createNotes, deleteAllNotes, getNoteById,
+    deleteNoteById, updateNote
 };
