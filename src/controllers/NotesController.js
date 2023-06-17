@@ -2,11 +2,23 @@ const Note = require("../models/NoteModel");
 
 
 const getNotes = async (request, response) => {
-    let listOfNotes = await Note.find();
+    let listOfNotes 
+    if (Object.keys(request.query).length > 0) {
+        if (request.query.isCompleted === "true"){
+            listOfNotes = await Note.find({isCompleted: true})
+        } else if (request.query.isCompleted === "false") {
+            listOfNotes = await Note.find({isCompleted: false})
+        } else {
+            listOfNotes = await Note.find()
+        }
+        response.send(listOfNotes)
+            
+    } else {
+        listOfNotes = await Note.find();
     
-    response.json({
-        notes: listOfNotes
-    });
+        response.send(listOfNotes);
+    }
+    
 };
 
 // Function to get a single note using params which is the ID of the note
@@ -40,6 +52,12 @@ const createNotes = async (request, response) => {
 
 const updateNote = async (request, response) => {
     let updatedNote = await Note.findByIdAndUpdate(request.params.id, request.body, {new: true})
+                                    .catch(error => {
+                                        console.log("Some error while accessing data:\n" + error)
+                                        response.status(404).json({
+                                            error: "Id not found in database"
+                                        })
+                                    });
     response.send(updatedNote);
 };
 
