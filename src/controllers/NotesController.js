@@ -1,4 +1,5 @@
 const Note = require("../models/NoteModel");
+const User = require("../models/UserModel");
 
 
 const getNotes = async (request, response) => {
@@ -36,6 +37,8 @@ const getNoteById = async (request, response) => {
 
 
 const createNotes = async (request, response) => {
+    let user = await User.findOne({username: request.body.username})
+
     let newNote = new Note({
         title: request.body.title,
         description: request.body.description,
@@ -44,9 +47,12 @@ const createNotes = async (request, response) => {
         createdAt: Date.now()
     });
     await newNote.save();
+    user.notes.push(newNote._id)
+    await user.save()
     response.status(201);
     response.json({
-        note: newNote
+        note: newNote,
+        user: user
     });
 };
 
