@@ -22,6 +22,11 @@ const getNotes = async (request, response) => {
     
 };
 
+const getMyNotes = async (request, response) => {
+    let user = await User.findOne({username: request.body.username}).populate("notes");
+    response.send(user.notes);
+}
+
 // Function to get a single note using params which is the ID of the note
 // Handles error by responding with message if note not found in db
 const getNoteById = async (request, response) => {
@@ -77,6 +82,8 @@ const deleteAllNotes = async (request, response) => {
 }
 
 const deleteNoteById = async (request, response) => {
+    let user = await User.findOne({username: request.body.username})
+
     let deletedNote = await Note.findByIdAndDelete(request.params.id)
                 .catch(error => {
                     console.log("Some error while accessing data:\n" + error)
@@ -85,6 +92,7 @@ const deleteNoteById = async (request, response) => {
                     })
                 });
     if (deletedNote){
+        user.notes.shift(note._id);
         response.json({
             message: "Note deleted"
         })
@@ -93,6 +101,6 @@ const deleteNoteById = async (request, response) => {
     
 
 module.exports = {
-    getNotes, createNotes, deleteAllNotes, getNoteById,
+    getNotes, getMyNotes, createNotes, deleteAllNotes, getNoteById,
     deleteNoteById, updateNote
 };

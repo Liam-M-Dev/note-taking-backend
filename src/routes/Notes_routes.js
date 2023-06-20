@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const {getNotes, createNotes, deleteAllNotes, 
+const {getNotes, getMyNotes, createNotes, deleteAllNotes, 
     getNoteById, deleteNoteById, updateNote} = require("../controllers/NotesController")
 
 // Route to get all the notes in the note collection
 router.get("/", getNotes);
+
+router.get("/my_notes", getMyNotes);
 
 // Route to get a note by an id;
 router.get("/note/:id", getNoteById);
